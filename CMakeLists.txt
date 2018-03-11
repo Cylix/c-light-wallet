@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.6)
 project(c_light_wallet)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -W -Wall -Wextra -O3")
 
 set(SOURCE_FILES
         src/iota/addresses.c

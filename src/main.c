@@ -1,53 +1,39 @@
 #include "main.h"
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <time.h>
 // iota-related stuff
 #include "iota/kerl.h"
 #include "iota/conversion.h"
 #include "iota/addresses.h"
 
-int print_help();
-void address(char* seedChars, int index, int security, char* result);
+void address(char *seedChars, int index, int security, char *result);
 
-int main(int argc, char *argv[]){
+int main()
+{
+    clock_t start = clock();
 
-	if (argc != 5) {
-		return print_help();
-	}
+    char seedChars[] = "FMBFUDZXVLQDJUZKPUJAQNYJHOWKZBQQKNHFMXWDYHTUIRCBRJEYUFR"
+                       "MFRYKYNANGTEDX9BVFFMXNQNTF";
+    char charAddress[81];
+    for (int i = 0; i < 100; i++) {
+        address(seedChars, i, 2, charAddress);
+        // printf("%s\n", charAddress);
+    }
+    clock_t end = clock();
+    float seconds = (float)(end - start) / CLOCKS_PER_SEC;
+    printf("Took %lf seconds to run.\n", seconds);
 
-	int num;
-	int security = (int)strtol(argv[2], NULL, 10);
-	int index = (int)strtol(argv[3], NULL, 10);
-	int count = (int)strtol(argv[4], NULL, 10);
-	char* seed_chars = argv[1];
-
-	char addresses[(count*82)];
-	addresses[0] = '\0';
-	for (int i = 0; i < count; i++) {
-		char char_address[81];
-		address(seed_chars, index+i, security, char_address);
-		strcat(addresses, char_address);
-		strcat(addresses, "\n");
-	}
-
-
-	printf("%s", addresses);
-	
-	return 0;
+    return 0;
 }
 
-int print_help() {
-	printf("Usage c_light_wallet <SEED_81_CHARS> SECURITY INDEX COUNT\n");
-	return 0;
-}
+void address(char *seedChars, int index, int security, char result[81])
+{
 
-void address(char* seed_chars, int index, int security, char result[81]) {
-	
-	unsigned char address[81];
-	unsigned char seed_bytes[48];
-	chars_to_bytes(seed_chars, seed_bytes, 81);
-	get_public_addr(seed_bytes, index, security, address);
-	
-	bytes_to_chars(address, result, 48);
+    unsigned char address[81];
+    unsigned char seedBytes[48];
+    chars_to_bytes(seedChars, seedBytes, 81);
+    get_public_addr(seedBytes, index, security, address);
+
+    bytes_to_chars(address, result, 48);
 }
